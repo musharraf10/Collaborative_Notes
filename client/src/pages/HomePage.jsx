@@ -87,10 +87,10 @@ function HomePage() {
       }
 
       const updatedNote = await response.json()
-      
+
       // Update both notes arrays
       const updateNotes = (notesList) =>
-        notesList.map(note => 
+        notesList.map(note =>
           note._id === noteId ? updatedNote : note
         ).sort((a, b) => {
           if (a.isPinned && !b.isPinned) return -1
@@ -130,14 +130,15 @@ function HomePage() {
               onClear={handleClearSearch}
               placeholder="Search notes, content, or tags..."
             />
-            
-            <Link 
-              to="/create" 
-              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200"
+
+            <Link
+              to="/create"
+              className="inline-flex items-center gap-2 px-4 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
             >
-              <PlusIcon className="h-5 w-5 mr-2" />
-              Create Note
+              <PlusIcon className="h-5 w-5" />
+              <span>Create Note</span>
             </Link>
+
           </div>
         </div>
 
@@ -176,14 +177,14 @@ function HomePage() {
               {searchQuery ? 'No notes found' : 'No notes yet'}
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              {searchQuery 
+              {searchQuery
                 ? `No notes match your search for "${searchQuery}". Try different keywords.`
                 : 'Get started by creating your first collaborative note and invite others to edit together.'
               }
             </p>
             {!searchQuery && (
-              <Link 
-                to="/create" 
+              <Link
+                to="/create"
                 className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />

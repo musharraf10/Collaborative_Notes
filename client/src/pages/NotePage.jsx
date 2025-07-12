@@ -5,15 +5,15 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import WYSIWYGEditor from '../components/WYSIWYGEditor'
 import { useSocket } from '../context/SocketContext'
 import { useUser } from '../context/UserContext'
-import { 
-  PinIcon,
+import {
+  MapPinIcon,
   TagIcon,
   ClockIcon,
   UsersIcon,
   DocumentTextIcon,
   ShareIcon
 } from '@heroicons/react/24/outline'
-import { PinIcon as PinIconSolid } from '@heroicons/react/24/solid'
+import { MapPinIcon as PinIconSolid } from '@heroicons/react/24/solid'
 import toast from 'react-hot-toast'
 
 function NotePage() {
@@ -139,7 +139,7 @@ function NotePage() {
 
   const handlePinToggle = async () => {
     if (isPinning) return
-    
+
     setIsPinning(true)
     try {
       const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'
@@ -163,7 +163,7 @@ function NotePage() {
 
   const handleAddTag = () => {
     if (!newTag.trim() || !note) return
-    
+
     const trimmedTag = newTag.trim()
     if (note.tags?.includes(trimmedTag)) {
       toast.error('Tag already exists')
@@ -180,7 +180,7 @@ function NotePage() {
 
   const handleRemoveTag = (tagToRemove) => {
     if (!note) return
-    
+
     const updatedTags = note.tags?.filter(tag => tag !== tagToRemove) || []
     setNote(prev => ({ ...prev, tags: updatedTags }))
     debouncedSave(note.content, note.title, updatedTags)
@@ -320,21 +320,20 @@ function NotePage() {
                 >
                   <ShareIcon className="h-5 w-5" />
                 </button>
-                
+
                 <button
                   onClick={handlePinToggle}
                   disabled={isPinning}
-                  className={`p-2 rounded-lg transition-colors ${
-                    note.isPinned
-                      ? 'text-amber-600 bg-amber-50 hover:bg-amber-100'
-                      : 'text-gray-600 hover:text-amber-600 hover:bg-amber-50'
-                  } ${isPinning ? 'animate-pulse' : ''}`}
+                  className={`p-2 rounded-lg transition-colors ${note.isPinned
+                    ? 'text-amber-600 bg-amber-50 hover:bg-amber-100'
+                    : 'text-gray-600 hover:text-amber-600 hover:bg-amber-50'
+                    } ${isPinning ? 'animate-pulse' : ''}`}
                   title={note.isPinned ? 'Unpin note' : 'Pin note'}
                 >
                   {note.isPinned ? (
                     <PinIconSolid className="h-5 w-5" />
                   ) : (
-                    <PinIcon className="h-5 w-5" />
+                    <MapPinIcon className="h-5 w-5" />
                   )}
                 </button>
               </div>
@@ -370,7 +369,7 @@ function NotePage() {
               placeholder="Note title..."
               maxLength={200}
             />
-            
+
             {/* Tags Section */}
             <div className="mt-4">
               <div className="flex items-center gap-2 mb-2">
@@ -383,7 +382,7 @@ function NotePage() {
                   Add tag
                 </button>
               </div>
-              
+
               <div className="flex flex-wrap gap-2">
                 {note.tags?.map((tag, index) => (
                   <span
@@ -396,7 +395,7 @@ function NotePage() {
                     <span className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">×</span>
                   </span>
                 ))}
-                
+
                 {showTagInput && (
                   <div className="flex items-center gap-2">
                     <input

@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { 
-  PinIcon, 
-  ClockIcon, 
+import {
+  MapPinIcon,
+  ClockIcon,
   UserIcon,
   EyeIcon,
   PencilIcon
 } from '@heroicons/react/24/outline'
-import { PinIcon as PinIconSolid } from '@heroicons/react/24/solid'
+import { MapPinIcon as PinIconSolid } from '@heroicons/react/24/solid'
 import toast from 'react-hot-toast'
 
 function NoteCard({ note, onPinToggle }) {
@@ -16,9 +16,9 @@ function NoteCard({ note, onPinToggle }) {
   const handlePinToggle = async (e) => {
     e.preventDefault()
     e.stopPropagation()
-    
+
     if (isToggling) return
-    
+
     setIsToggling(true)
     try {
       await onPinToggle(note._id)
@@ -49,23 +49,21 @@ function NoteCard({ note, onPinToggle }) {
   }
 
   return (
-    <div className={`group relative bg-white rounded-xl shadow-sm border transition-all duration-200 hover:shadow-lg hover:-translate-y-1 ${
-      note.isPinned ? 'border-amber-200 bg-gradient-to-br from-amber-50 to-white' : 'border-gray-200'
-    }`}>
+    <div className={`group relative bg-white rounded-xl shadow-sm border transition-all duration-200 hover:shadow-lg hover:-translate-y-1 ${note.isPinned ? 'border-amber-200 bg-gradient-to-br from-amber-50 to-white' : 'border-gray-200'
+      }`}>
       {/* Pin Button */}
       <button
         onClick={handlePinToggle}
         disabled={isToggling}
-        className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-200 ${
-          note.isPinned 
-            ? 'text-amber-600 bg-amber-100 hover:bg-amber-200' 
-            : 'text-gray-400 bg-gray-100 hover:bg-gray-200 opacity-0 group-hover:opacity-100'
-        } ${isToggling ? 'animate-pulse' : ''}`}
+        className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-200 ${note.isPinned
+          ? 'text-amber-600 bg-amber-100 hover:bg-amber-200'
+          : 'text-gray-400 bg-gray-100 hover:bg-gray-200 opacity-0 group-hover:opacity-100'
+          } ${isToggling ? 'animate-pulse' : ''}`}
       >
         {note.isPinned ? (
           <PinIconSolid className="h-4 w-4" />
         ) : (
-          <PinIcon className="h-4 w-4" />
+          <MapPinIcon className="h-4 w-4" />
         )}
       </button>
 
@@ -115,7 +113,7 @@ function NoteCard({ note, onPinToggle }) {
               <span>{formatDate(note.updatedAt)}</span>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <EyeIcon className="h-4 w-4" />
             <PencilIcon className="h-4 w-4" />

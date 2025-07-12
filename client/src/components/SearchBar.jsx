@@ -1,18 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 function SearchBar({ onSearch, onClear, placeholder = "Search notes..." }) {
   const [query, setQuery] = useState('')
   const [isSearching, setIsSearching] = useState(false)
+  const prevQueryRef = useRef('')  // Keeps track of the last searched value
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (query.trim()) {
+      const trimmedQuery = query.trim()
+
+      // Only call search if new character(s) typed
+      if (trimmedQuery && trimmedQuery !== prevQueryRef.current) {
         setIsSearching(true)
-        onSearch(query.trim())
-        setIsSearching(false)
-      } else {
+          ; (async () => {
+            await onSearch(trimmedQuery)
+            prevQueryRef.current = trimmedQuery
+            setIsSearching(false)
+          })()
+      } else if (!trimmedQuery) {
         onClear()
+        prevQueryRef.current = ''
+        setIsSearching(false)
       }
     }, 300)
 
@@ -22,6 +31,8 @@ function SearchBar({ onSearch, onClear, placeholder = "Search notes..." }) {
   const handleClear = () => {
     setQuery('')
     onClear()
+    setIsSearching(false)
+    prevQueryRef.current = ''
   }
 
   return (
@@ -33,7 +44,7 @@ function SearchBar({ onSearch, onClear, placeholder = "Search notes..." }) {
           <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
         )}
       </div>
-      
+
       <input
         type="text"
         value={query}
@@ -41,7 +52,7 @@ function SearchBar({ onSearch, onClear, placeholder = "Search notes..." }) {
         className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl leading-5 bg-white/80 backdrop-blur-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
         placeholder={placeholder}
       />
-      
+
       {query && (
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
           <button

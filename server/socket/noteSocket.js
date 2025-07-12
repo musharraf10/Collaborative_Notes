@@ -1,35 +1,33 @@
-import Note from '../models/Note.js';
+import Note from "../models/Note.js";
 
-const activeUsers = new Map(); // noteId -> Set of user objects
-const userSockets = new Map(); // socketId -> user info
+const activeUsers = new Map();
+const userSockets = new Map();
 
 export function handleSocketConnection(socket, io) {
-  console.log('User connected:', socket.id);
+  console.log("User connected:", socket.id);
 
-  // Join a note room
-  socket.on('join_note', async (data) => {
+  socket.on("join_note", async (data) => {
     try {
-      const { noteId, userName = 'Anonymous' } = data;
-      
-      // Leave previous rooms
-      const previousRooms = Array.from(socket.rooms).filter(room => room !== socket.id);
-      previousRooms.forEach(room => {
+      const { noteId, userName = "Anonymous" } = data;
+
+      const previousRooms = Array.from(socket.rooms).filter(
+        (room) => room !== socket.id
+      );
+      previousRooms.forEach((room) => {
         socket.leave(room);
         removeUserFromRoom(room, socket.id);
       });
 
-      // Join new room
       socket.join(noteId);
-      
-      // Track user
+
       const userInfo = {
         socketId: socket.id,
         userName,
-        joinedAt: new Date()
+        joinedAt: new Date(),
       };
-      
+
       userSockets.set(socket.id, { ...userInfo, noteId });
-      
+
       if (!activeUsers.has(noteId)) {
         activeUsers.set(noteId, new Set());
       }
@@ -38,73 +36,73 @@ export function handleSocketConnection(socket, io) {
       // Get current note data
       const note = await Note.findById(noteId);
       if (note) {
-        socket.emit('note_loaded', note);
+        socket.emit("note_loaded", note);
       }
 
       // Broadcast updated user list
       const users = Array.from(activeUsers.get(noteId) || []);
-      io.to(noteId).emit('active_users', users);
-      
+      io.to(noteId).emit("active_users", users);
+
       console.log(`User ${userName} joined note ${noteId}`);
     } catch (error) {
-      console.error('Error joining note:', error);
-      socket.emit('error', { message: 'Failed to join note' });
+      console.error("Error joining note:", error);
+      socket.emit("error", { message: "Failed to join note" });
     }
   });
 
   // Handle note updates
-  socket.on('note_update', async (data) => {
+  socket.on("note_update", async (data) => {
     try {
-      const { noteId, content, title, userName = 'Anonymous' } = data;
+      const { noteId, content, title, userName = "Anonymous" } = data;
       const userInfo = userSockets.get(socket.id);
-      
+
       if (!userInfo || userInfo.noteId !== noteId) {
-        socket.emit('error', { message: 'Not authorized to edit this note' });
+        socket.emit("error", { message: "Not authorized to edit this note" });
         return;
       }
 
       // Update in database
       const updateData = {
         updatedAt: new Date(),
-        lastEditedBy: userName
+        lastEditedBy: userName,
       };
 
       if (content !== undefined) updateData.content = content;
       if (title !== undefined) updateData.title = title;
 
-      const note = await Note.findByIdAndUpdate(noteId, updateData, { new: true });
+      const note = await Note.findByIdAndUpdate(noteId, updateData, {
+        new: true,
+      });
 
       if (note) {
         // Broadcast to all users in the room except sender
-        socket.to(noteId).emit('note_updated', {
+        socket.to(noteId).emit("note_updated", {
           content: note.content,
           title: note.title,
           updatedAt: note.updatedAt,
           lastEditedBy: note.lastEditedBy,
-          updatedBy: userName
+          updatedBy: userName,
         });
       }
     } catch (error) {
-      console.error('Error updating note:', error);
-      socket.emit('error', { message: 'Failed to update note' });
+      console.error("Error updating note:", error);
+      socket.emit("error", { message: "Failed to update note" });
     }
   });
 
-  // Handle typing indicators
-  socket.on('typing_start', (data) => {
+  socket.on("typing_start", (data) => {
     const { noteId, userName } = data;
-    socket.to(noteId).emit('user_typing', { userName, isTyping: true });
+    socket.to(noteId).emit("user_typing", { userName, isTyping: true });
   });
 
-  socket.on('typing_stop', (data) => {
+  socket.on("typing_stop", (data) => {
     const { noteId, userName } = data;
-    socket.to(noteId).emit('user_typing', { userName, isTyping: false });
+    socket.to(noteId).emit("user_typing", { userName, isTyping: false });
   });
 
-  // Handle disconnection
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-    
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+
     const userInfo = userSockets.get(socket.id);
     if (userInfo) {
       removeUserFromRoom(userInfo.noteId, socket.id);
@@ -116,11 +114,13 @@ export function handleSocketConnection(socket, io) {
 function removeUserFromRoom(noteId, socketId) {
   if (activeUsers.has(noteId)) {
     const users = activeUsers.get(noteId);
-    const userToRemove = Array.from(users).find(user => user.socketId === socketId);
-    
+    const userToRemove = Array.from(users).find(
+      (user) => user.socketId === socketId
+    );
+
     if (userToRemove) {
       users.delete(userToRemove);
-      
+
       if (users.size === 0) {
         activeUsers.delete(noteId);
       }
