@@ -33,6 +33,7 @@
 - Node.js (v14 or higher)
 - MongoDB (local or cloud instance)
 - npm or yarn
+- First install dependecies using npm install in both folders (server, client)
 
 ### Environment Setup
 
@@ -47,6 +48,7 @@ Edit `.env` with your configuration:
 ```env
 # MongoDB URL
 MONGODB_URI=mongodb://localhost:27017/collaborative-notes
+// or 127.0.0.1:27017
 
 # Server port
 PORT=5000
@@ -107,12 +109,10 @@ collaborative-notes-app/
 ### Running in Development
 
 ```bash
-# Start both frontend and backend
-npm run dev
 
 # Or start individually:
-npm run server  # Backend only
-npm run client  # Frontend only
+npm start  # Backend only
+npm run dev  # Frontend only
 ```
 
 ### Environment Variables for Production
@@ -121,4 +121,8 @@ npm run client  # Frontend only
 MONGODB_URI=<your-mongodb-connection-string>
 PORT=5000
 CLIENT_URL=<your-frontend-url>
+
+In frontend 
+create .env file add 
+VITE_SERVER_URL=http://localhost:5000 
 ```
