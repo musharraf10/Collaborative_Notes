@@ -26,11 +26,11 @@ function HomePage() {
     try {
       const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'
       const response = await fetch(`${serverUrl}/api/notes`)
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch notes')
       }
-      
+
       const data = await response.json()
       setNotes(data)
     } catch (error) {
@@ -45,7 +45,7 @@ function HomePage() {
     const date = new Date(dateString)
     const now = new Date()
     const diffInMinutes = Math.floor((now - date) / (1000 * 60))
-    
+
     if (diffInMinutes < 1) return 'Just now'
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`
@@ -55,14 +55,14 @@ function HomePage() {
   return (
     <>
       <Header />
-      
+
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Notes</h2>
             <p className="text-gray-600">Create and collaborate on notes in real-time</p>
           </div>
-          
+
           <Link to="/create" className="btn btn-primary">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -95,12 +95,12 @@ function HomePage() {
                 <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
                   {note.title}
                 </h3>
-                
+
                 <div className="text-sm text-gray-500 space-y-1">
                   <p>Last edited by {note.lastEditedBy}</p>
                   <p>{formatDate(note.updatedAt)}</p>
                 </div>
-                
+
                 <div className="mt-4 flex items-center text-sm text-gray-400">
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -113,9 +113,9 @@ function HomePage() {
         )}
       </main>
 
-      <UserNameModal 
-        isOpen={showNameModal} 
-        onClose={() => setShowNameModal(false)} 
+      <UserNameModal
+        isOpen={showNameModal}
+        onClose={() => setShowNameModal(false)}
       />
     </>
   )

@@ -25,7 +25,7 @@ function UserNameModal({ isOpen, onClose }) {
         <p className="text-gray-600 mb-6">
           Please enter your name so others can see who's editing the notes.
         </p>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="userName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -43,7 +43,7 @@ function UserNameModal({ isOpen, onClose }) {
               autoFocus
             />
           </div>
-          
+
           <div className="flex gap-3">
             <button
               type="submit"

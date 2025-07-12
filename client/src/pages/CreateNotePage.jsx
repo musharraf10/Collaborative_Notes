@@ -12,7 +12,7 @@ function CreateNotePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (!title.trim()) {
       toast.error('Please enter a title for your note')
       return
@@ -52,11 +52,11 @@ function CreateNotePage() {
   return (
     <>
       <Header title="Create New Note" showBackButton />
-      
+
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="card p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Create a New Note</h2>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
@@ -108,7 +108,7 @@ function CreateNotePage() {
                   </>
                 )}
               </button>
-              
+
               <button
                 type="button"
                 onClick={() => navigate('/')}
