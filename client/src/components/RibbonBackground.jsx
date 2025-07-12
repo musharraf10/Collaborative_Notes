@@ -1,22 +1,21 @@
-import { useEffect } from 'react'
+import { useEffect } from "react"
 
 function RibbonsBackground() {
     useEffect(() => {
-        import('../utils/ribbons.js').then((module) => {
+        import("../utils/ribbons.js").then(() => {
             if (window.Ribbons) {
-                const ribbons = new window.Ribbons({
-                    colorSaturation: "50%",
-                    colorBrightness: "60%",
+                new window.Ribbons({
+                    colorSaturation: "70%",
+                    colorBrightness: "55%",
                     colorAlpha: 0.2,
                     colorCycleSpeed: 3,
-                    verticalPosition: "center",
-                    horizontalSpeed: 90,
-                    ribbonCount: 0,          // No auto
+                    verticalPosition: "random",
+                    horizontalSpeed: 100,
+                    ribbonCount: 2,
                     strokeSize: 0,
-                    parallaxAmount: -0.1,
+                    parallaxAmount: 0,
                     animateSections: true,
                 })
-                ribbons.startManualRibbons(10000)
             }
         })
     }, [])
