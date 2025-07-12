@@ -12,6 +12,15 @@ const noteSchema = new mongoose.Schema({
     default: '',
     maxlength: 50000
   },
+  isPinned: {
+    type: Boolean,
+    default: false
+  },
+  tags: [{
+    type: String,
+    trim: true,
+    maxlength: 50
+  }],
   createdAt: {
     type: Date,
     default: Date.now
